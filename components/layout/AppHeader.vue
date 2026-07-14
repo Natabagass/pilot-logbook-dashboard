@@ -4,6 +4,10 @@ import { usePilotStore } from '~/stores/pilot'
 
 const pilot = usePilotStore()
 const notifCount = 3
+
+const initials = computed(() =>
+  pilot.pilot.name.split(' ').map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
+)
 </script>
 
 <template>
@@ -25,12 +29,15 @@ const notifCount = 3
     </div>
 
     <div class="app-header__pilot">
-      <p class="app-header__greeting">Good morning,</p>
-      <p class="app-header__name">{{ pilot.pilot.name }}</p>
-      <p class="app-header__hours">
-        <Plane :size="12" />
-        {{ pilot.pilot.totalFlightHours.toLocaleString() }} hrs total
-      </p>
+      <div class="app-header__avatar" aria-hidden="true">{{ initials }}</div>
+      <div>
+        <p class="app-header__greeting">Good morning,</p>
+        <p class="app-header__name">{{ pilot.pilot.name }}</p>
+        <p class="app-header__hours">
+          <Plane :size="12" />
+          {{ pilot.pilot.totalFlightHours.toLocaleString() }} hrs total
+        </p>
+      </div>
     </div>
   </header>
 </template>
@@ -107,8 +114,23 @@ const notifCount = 3
 
   &__pilot {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    background: $color-red;
+    color: $color-text-on-dark;
+    font-size: $font-sm;
+    font-weight: $font-bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.04em;
   }
 
   &__greeting {
