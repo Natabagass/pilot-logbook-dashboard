@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import docsData from '~/docs/mock-documents.json'
+import docsData from '../docs/mock-documents.json'
 import { daysRemaining, expiryStatus, expiryLabel } from '~/composables/useDocExpiry'
 
 export const useDocumentsStore = defineStore('documents', () => {
