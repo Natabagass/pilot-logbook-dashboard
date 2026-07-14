@@ -9,7 +9,7 @@ import {
   Filler,
   Tooltip,
   type ChartOptions,
-  type ChartData,
+  type TooltipItem,
 } from 'chart.js'
 import type { ChartToggle } from '~/stores/pilot'
 import { usePilotStore } from '~/stores/pilot'
@@ -22,7 +22,7 @@ const store = usePilotStore()
 
 const TODAY_IDX = 7 // index of today in the 15-point array
 
-const chartData = computed<ChartData<'line'>>(() => {
+const chartData = computed(() => {
   const { points, limit, max } = store.chartPoints(props.toggle)
 
   return {
@@ -58,7 +58,7 @@ const chartData = computed<ChartData<'line'>>(() => {
   }
 })
 
-const chartOptions = computed<ChartOptions<'line'>>(() => {
+const chartOptions = computed(() => {
   const { max } = store.chartPoints(props.toggle)
 
   return {
@@ -69,8 +69,8 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
       legend: { display: false },
       tooltip: {
         callbacks: {
-          label: (ctx) => (ctx.datasetIndex === 0 ? ` ${ctx.parsed.y.toFixed(1)}h` : ''),
-          title: (items) => items[0]?.label ?? '',
+          label: (ctx: TooltipItem<'line'>): string => (ctx.datasetIndex === 0 ? ` ${(ctx.parsed as { y: number }).y.toFixed(1)}h` : ''),
+          title: (items: TooltipItem<'line'>[]): string => items[0]?.label ?? '',
         },
         backgroundColor: '#0E2138',
         titleColor: 'rgba(255,255,255,0.6)',
@@ -81,42 +81,39 @@ const chartOptions = computed<ChartOptions<'line'>>(() => {
     },
     scales: {
       x: {
+        type: 'category' as const,
         grid: { display: false },
         ticks: {
           color: '#9CA3AF',
           font: { size: 10, family: 'Inter' },
           maxRotation: 0,
-          callback: (_val, idx) => {
-            // Show every other label to avoid crowding
+          callback: (_val: number | string, idx: number): string => {
             return idx % 2 === 0
-              ? chartData.value.labels?.[idx]
+              ? String(chartData.value.labels?.[idx] ?? '')
               : ''
           },
         },
       },
       y: {
+        type: 'linear' as const,
         min: 0,
         max,
-        grid: {
-          color: 'rgba(0,0,0,0.05)',
-        },
+        grid: { color: 'rgba(0,0,0,0.05)' },
         ticks: {
           color: '#9CA3AF',
           font: { size: 10, family: 'Inter' },
           maxTicksLimit: 5,
-          callback: (val) => `${val}h`,
+          callback: (val: number | string) => `${val}h`,
         },
       },
     },
-  }
+  } as ChartOptions<'line'>
 })
 </script>
 
 <template>
   <div class="trend-chart">
-    <ClientOnly>
-      <Line :data="chartData" :options="chartOptions" />
-    </ClientOnly>
+    <Line :data="chartData" :options="chartOptions" />
   </div>
 </template>
 

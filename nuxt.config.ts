@@ -3,7 +3,15 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@pinia/nuxt'],
   css: ['~/styles/main.scss'],
+  app: {
+    head: {
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/images/flight-icon.png' }]
+    }
+  },
   vite: {
+    optimizeDeps: {
+      include: ['chart.js', 'vue-chartjs']
+    },
     css: {
       preprocessorOptions: {
         scss: {

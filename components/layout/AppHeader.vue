@@ -58,6 +58,9 @@ const notifCount = 3
     height: 28px;
     width: auto;
     object-fit: contain;
+    background: $color-surface;
+    border-radius: $radius-md;
+    padding: 4px 10px;
   }
 
   &__brand-name {

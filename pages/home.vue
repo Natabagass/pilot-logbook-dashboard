@@ -29,7 +29,7 @@ definePageMeta({ layout: 'default' })
         <div class="section-header">
           <h2 id="hours-heading" class="section-title">Hours to Limit</h2>
         </div>
-        <HoursHoursToLimit />
+        <HoursToLimit />
       </section>
 
       <!-- My Documents -->

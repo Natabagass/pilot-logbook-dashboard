@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { Home, CalendarDays, LayoutGrid } from 'lucide-vue-next'
+import { Home, CalendarDays } from 'lucide-vue-next'
 
 const route = useRoute()
 
 const navItems = [
   { label: 'Home',     icon: Home,         path: '/home' },
   { label: 'Schedule', icon: CalendarDays, path: '/schedule' },
-  { label: 'More',     icon: LayoutGrid,   path: '/more' },
 ]
 </script>
 
