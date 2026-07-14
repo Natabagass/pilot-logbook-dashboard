@@ -25,101 +25,117 @@ async function handleSubmit() {
 
 <template>
   <div class="signin">
-    <!-- Full navy background -->
-    <div class="signin__bg">
-      <!-- Decorative runway lines -->
-      <div class="signin__runway">
-        <span v-for="n in 8" :key="n" class="signin__runway-stripe" />
-      </div>
-      <!-- Subtle grid -->
-      <div class="signin__grid" />
-    </div>
-
-    <!-- Top brand area -->
-    <div class="signin__brand">
-      <div class="signin__logo-ring">
-        <Plane :size="28" class="signin__plane-icon" />
-      </div>
-      <div class="signin__brand-text">
-        <h1 class="signin__brand-name">Susi Air</h1>
-        <p class="signin__brand-sub">Pilot Operations Center</p>
-      </div>
-    </div>
-
-    <!-- Bottom form sheet -->
-    <div class="signin__sheet">
-      <div class="signin__sheet-handle" />
-
-      <div class="signin__sheet-head">
-        <h2 class="signin__title">Sign In</h2>
-        <p class="signin__sub">Enter your crew credentials to continue</p>
+    <div class="signin__content">
+      <!-- Decorative bg -->
+      <div class="signin__bg">
+        <div class="signin__runway">
+          <span v-for="n in 8" :key="n" class="signin__runway-stripe" />
+        </div>
+        <div class="signin__grid" />
       </div>
 
-      <form class="signin__form" @submit.prevent="handleSubmit">
-        <div class="input-group">
-          <label for="username">Username</label>
-          <input
-            id="username"
-            v-model="username"
-            class="input-field"
-            type="text"
-            placeholder="e.g. admin"
-            autocomplete="username"
-            required
-          />
+      <!-- Brand -->
+      <div class="signin__brand">
+        <div class="signin__logo-ring">
+          <Plane :size="28" class="signin__plane-icon" />
+        </div>
+        <div class="signin__brand-text">
+          <h1 class="signin__brand-name">Susi Air</h1>
+          <p class="signin__brand-sub">Pilot Operations Center</p>
+        </div>
+      </div>
+
+      <!-- Form sheet -->
+      <div class="signin__sheet">
+        <div class="signin__sheet-handle" />
+
+        <div class="signin__sheet-head">
+          <h2 class="signin__title">Sign In</h2>
+          <p class="signin__sub">Enter your crew credentials to continue</p>
         </div>
 
-        <div class="input-group">
-          <label for="password">Password</label>
-          <div class="input-wrapper">
+        <form class="signin__form" @submit.prevent="handleSubmit">
+          <div class="input-group">
+            <label for="username">Username</label>
             <input
-              id="password"
-              v-model="password"
+              id="username"
+              v-model="username"
               class="input-field"
-              :type="showPassword ? 'text' : 'password'"
-              placeholder="••••••••"
-              autocomplete="current-password"
+              type="text"
+              placeholder="e.g. admin"
+              autocomplete="username"
               required
             />
-            <button
-              type="button"
-              class="input-icon"
-              :aria-label="showPassword ? 'Hide password' : 'Show password'"
-              @click="showPassword = !showPassword"
-            >
-              <component :is="showPassword ? EyeOff : Eye" :size="18" />
-            </button>
           </div>
+
+          <div class="input-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <input
+                id="password"
+                v-model="password"
+                class="input-field"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="input-icon"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'"
+                @click="showPassword = !showPassword"
+              >
+                <component :is="showPassword ? EyeOff : Eye" :size="18" />
+              </button>
+            </div>
+          </div>
+
+          <Transition name="err">
+            <p v-if="error" class="signin__error">{{ error }}</p>
+          </Transition>
+
+          <button type="submit" class="btn btn--primary" :disabled="loading">
+            Sign In
+          </button>
+        </form>
+
+        <p class="signin__help">
+          Need help?
+          <a href="mailto:crd@susiair.com" class="signin__crd">Contact CRD</a>
+        </p>
+      </div>
+
+      <!-- Loading overlay -->
+      <Transition name="loader">
+        <div v-if="loading" class="signin__loader">
+          <div class="signin__loader-brand">
+            <div class="signin__logo-ring signin__logo-ring--lg">
+              <Plane :size="28" class="signin__plane-icon" />
+            </div>
+            <h1 class="signin__loader-name">Susi Air</h1>
+            <p class="signin__loader-sub">Pilot Operations Center</p>
+          </div>
+          <div class="signin__loader-spinner" />
         </div>
-
-        <Transition name="err">
-          <p v-if="error" class="signin__error">{{ error }}</p>
-        </Transition>
-
-        <button type="submit" class="btn btn--primary" :disabled="loading">
-          <span v-if="loading" class="signin__spinner" />
-          <span v-else>Sign In</span>
-        </button>
-      </form>
-
-      <p class="signin__help">
-        Need help?
-        <a href="mailto:crd@susiair.com" class="signin__crd">Contact CRD</a>
-      </p>
+      </Transition>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .signin {
-  min-height: 100vh;
   max-width: 430px;
   margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  background: $color-navy;
-  position: relative;
-  overflow: hidden;
+
+  &__content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: $color-navy;
+    overflow: hidden;
+  }
 
   // ── decorative bg ──────────────────────────────────────
   &__bg {
@@ -209,7 +225,6 @@ async function handleSubmit() {
   &__sheet {
     position: relative;
     z-index: 1;
-    margin-top: auto;
     background: $color-surface;
     border-radius: $radius-2xl $radius-2xl 0 0;
     padding: $space-3 $space-6 calc(#{$space-8} + env(safe-area-inset-bottom));
@@ -273,14 +288,58 @@ async function handleSubmit() {
     &:hover { text-decoration: underline; }
   }
 
-  &__spinner {
-    width: 18px;
-    height: 18px;
-    border: 2.5px solid rgba(255,255,255,0.4);
-    border-top-color: white;
-    border-radius: $radius-full;
-    animation: spin 0.7s linear infinite;
+  // ── loader overlay ──────────────────────────────────────
+  &__loader {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: $color-navy;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $space-10;
   }
+
+  &__loader-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__loader-name {
+    font-size: $font-2xl;
+    font-weight: $font-bold;
+    color: $color-text-on-dark;
+    letter-spacing: -0.02em;
+    line-height: $leading-tight;
+  }
+
+  &__loader-sub {
+    font-size: $font-xs;
+    font-weight: $font-medium;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__loader-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(255,255,255,0.15);
+    border-top-color: $color-red;
+    border-radius: $radius-full;
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+// Loader transition
+.loader-enter-active, .loader-leave-active {
+  transition: opacity 0.3s ease;
+}
+.loader-enter-from, .loader-leave-to {
+  opacity: 0;
 }
 
 // Error transition
