@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import schedulesData from '../docs/mock-schedules.json'
+import { mockSchedules as schedulesData } from '../data/mockSchedules'
 
 export const useSchedulesStore = defineStore('schedules', () => {
   const legend = schedulesData.legend

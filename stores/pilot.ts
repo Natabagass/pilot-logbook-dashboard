@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import flightHoursData from '../docs/mock-flight-hours.json'
+import { mockFlightHours as flightHoursData } from '../data/mockFlightHours'
 import { addDays, useRollingSum } from '~/composables/useRollingSum'
 
 const TODAY = '2026-05-31'
