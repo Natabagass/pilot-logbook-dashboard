@@ -54,9 +54,6 @@ const news = [
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
   padding-bottom: $space-1;
-  margin: 0 (-$page-padding-x);
-  padding-left: $page-padding-x;
-  padding-right: $page-padding-x;
 
   &::-webkit-scrollbar { display: none; }
   scrollbar-width: none;
